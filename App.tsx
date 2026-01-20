@@ -33,7 +33,7 @@ const App: React.FC = () => {
   const [processingState, setProcessingState] = useState<ProcessingState>({
     isProcessing: false, progress: 0, currentStep: 'Ready', totalChunks: 0, processedChunks: 0,
   });
-  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
+  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(() => !localStorage.getItem('gemini_api_key'));
   const [error, setError] = useState<string | null>(null);
   const [generatedChunks, setGeneratedChunks] = useState<string[]>([]);
   const [chunkTimings, setChunkTimings] = useState<ChunkTiming[]>([]);
@@ -204,11 +204,12 @@ const App: React.FC = () => {
       <main className="w-full max-w-5xl relative z-10 flex flex-col items-center pb-20">
         <button
           onClick={() => setIsApiKeyModalOpen(true)}
-          className="fixed top-6 left-6 p-3 rounded-2xl bg-slate-900/50 backdrop-blur-xl border border-white/10 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all z-50 group active:scale-95 shadow-2xl"
+          className="fixed bottom-6 left-6 p-3 rounded-2xl bg-slate-900/50 backdrop-blur-xl border border-white/10 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all z-50 group active:scale-95 shadow-2xl"
           title="Set Gemini API Key"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+            <path d="M15 6a3 3 0 1 0-6 0 3 3 0 0 0 6 0" />
+            <path d="M12 9v12m0 0h3m-3 0h-3m4-6h-4" />
           </svg>
           <div className="absolute left-full ml-3 px-2 py-1 bg-slate-800 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-white/5">
             API KEY
@@ -233,6 +234,11 @@ const App: React.FC = () => {
         </div>
         <HistoryPanel history={history} isOpen={showHistoryModal} onClose={() => setShowHistoryModal(false)} onRestore={handleRestoreHistory} onDelete={handleDeleteHistory} onClearCache={clearCache} />
         <ApiKeyModal isOpen={isApiKeyModalOpen} onClose={() => setIsApiKeyModalOpen(false)} />
+        <footer className="w-full py-8 mt-12 border-t border-white/5 flex justify-center">
+          <p className="text-slate-500 text-xs font-medium tracking-wider">
+            &copy; 2026 Technited Minds
+          </p>
+        </footer>
       </main>
     </div>
   );

@@ -19,13 +19,13 @@ export const Header: React.FC<HeaderProps> = () => {
             </svg>
           </div>
         </div>
-        
-        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight flex items-baseline leading-[1.2]">
+
+        <h1 className="text-3xl md:text-6xl font-extrabold tracking-tight flex items-baseline leading-[1.2]">
           <span className="text-white drop-shadow-sm">Audios</span>
           <span className="bg-clip-text text-transparent bg-gradient-to-tr from-cyan-400 via-blue-500 to-indigo-600 ml-2 pb-2">Amigos</span>
         </h1>
       </div>
-      
+
       <div className="flex items-center gap-4 opacity-60">
         <span className="h-[1px] w-12 bg-gradient-to-r from-transparent to-slate-700"></span>
         <p className="text-slate-400 text-[10px] md:text-xs font-mono tracking-[0.3em] uppercase">
