@@ -1,0 +1,6 @@
+
+{
+  "name": "Audios Amigos",
+  "description": "A high-fidelity text-to-speech synthesizer using Gemini 2.5. Features long-form text processing, smart chunking, and precise audio concatenation with glassmorphic UI.",
+  "requestFramePermissions": []
+}

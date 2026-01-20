@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Audios Amigos | Neural Voice Synthesis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --glass-border: rgba(255, 255, 255, 0.05);
+        --glass-surface: rgba(10, 10, 15, 0.6); /* Deep space glass */
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #050505; 
+        overflow-x: hidden;
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Manrope', sans-serif; 
+      }
+
+      /* Custom Scrollbar - Thinner, Darker */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      
+      /* Professional Glassmorphism */
+      .glass-card {
+        background: var(--glass-surface);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.4);
+      }
+      
+      .glass-input {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--glass-border);
+        transition: all 0.3s ease;
+      }
+      .glass-input:focus {
+        border-color: rgba(56, 189, 248, 0.2); 
+        box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.05);
+        background: rgba(0, 0, 0, 0.4);
+      }
+
+      /* Animations */
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) scale(1); opacity: 0.3; }
+        50% { transform: translateY(-20px) scale(1.05); opacity: 0.5; }
+      }
+      .animate-float {
+        animation: float 20s ease-in-out infinite;
+      }
+
+      @keyframes slide-up {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-slide-up {
+        animation: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      
+      @keyframes shimmer {
+        100% { transform: translateX(100%); }
+      }
+
+      /* Progress Bar Exit */
+      @keyframes collapse-out {
+        0% { opacity: 1; max-height: 100px; margin-bottom: 2rem; transform: scale(1); }
+        100% { opacity: 0; max-height: 0; margin-bottom: 0; transform: scale(0.95); }
+      }
+      .animate-collapse-out {
+        animation: collapse-out 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        pointer-events: none;
+      }
+
+      /* Rare, Bright Twinkle Animation */
+      @keyframes rare-twinkle {
+        0%, 90% { 
+          opacity: 0; 
+          transform: scale(0.5); 
+        }
+        95% { 
+          opacity: 1; 
+          transform: scale(1.5); 
+          box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.8);
+        }
+        100% { 
+          opacity: 0; 
+          transform: scale(0.5); 
+        }
+      }
+
+      /* Subtle Breath for the Nebula */
+      @keyframes nebula-breath {
+        0%, 100% { opacity: 0.05; transform: scale(1); }
+        50% { opacity: 0.08; transform: scale(1.1); }
+      }
+
+      /* Deep Background Shift */
+      @keyframes deep-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+    </style>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react/jsx-runtime": "https://esm.sh/react@18.2.0/jsx-runtime",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?deps=react@18.2.0",
+    "react-dom": "https://esm.sh/react-dom@18.2.0?deps=react@18.2.0",
+    "@google/genai": "https://esm.sh/@google/genai@^1.37.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-[#050505] text-slate-200 antialiased selection:bg-cyan-500/20 selection:text-cyan-50">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
