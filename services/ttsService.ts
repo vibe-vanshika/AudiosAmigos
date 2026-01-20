@@ -5,7 +5,7 @@ import { decodeAudioData, mergeAudioBuffers } from "../utils/audioEngine";
 import { generateCacheKey, getCachedAudio, cacheAudio } from "../utils/cache";
 
 // Optimization Constants
-const CHUNK_SIZE_WORDS = 300; 
+const CHUNK_SIZE_WORDS = 300;
 const SILENCE_GAP_SECONDS = 0.4;
 const TTS_MODEL = "gemini-2.5-flash-preview-tts";
 const TRANSLATION_MODEL = "gemini-2.5-flash";
@@ -29,14 +29,19 @@ const SYNTHESIS_MESSAGES = [
 ];
 
 export class TTSService {
-  private ai: GoogleGenAI;
   private audioContext: AudioContext;
 
   constructor() {
-    const apiKey = process.env.API_KEY || '';
-    this.ai = new GoogleGenAI({ apiKey });
     const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
     this.audioContext = new AudioContextClass();
+  }
+
+  private getAI(): GoogleGenAI {
+    const apiKey = localStorage.getItem('gemini_api_key');
+    if (!apiKey) {
+      throw new Error("Gemini API Key missing. Please set it using the key icon in the top-left corner.");
+    }
+    return new GoogleGenAI({ apiKey });
   }
 
   private async withRetry<T>(task: () => Promise<T>, retryCount = 0, signal?: AbortSignal): Promise<T> {
@@ -61,18 +66,18 @@ export class TTSService {
    * Note: textToProcess should already be translated if necessary.
    */
   async synthesize(
-    textToProcess: string, 
+    textToProcess: string,
     config: TTSConfig,
     onProgress: (state: ProcessingState) => void,
     signal?: AbortSignal
   ): Promise<SynthesisResult> {
-    
+
     const cacheKey = await generateCacheKey(textToProcess, config);
     const cachedData = await getCachedAudio(cacheKey);
 
     if (cachedData) {
-        onProgress({ isProcessing: false, progress: 100, currentStep: "Retrieved from neural cache", totalChunks: cachedData.chunks.length, processedChunks: cachedData.chunks.length });
-        return { audioUrl: URL.createObjectURL(cachedData.blob), chunks: cachedData.chunks, timings: cachedData.timings };
+      onProgress({ isProcessing: false, progress: 100, currentStep: "Retrieved from neural cache", totalChunks: cachedData.chunks.length, processedChunks: cachedData.chunks.length });
+      return { audioUrl: URL.createObjectURL(cachedData.blob), chunks: cachedData.chunks, timings: cachedData.timings };
     }
 
     const chunks = chunkText(textToProcess, CHUNK_SIZE_WORDS);
@@ -81,54 +86,54 @@ export class TTSService {
 
     let completedCount = 0;
     let virtualProgress = 10;
-    
+
     const updateProgress = (step: string) => {
       const realProgress = 10 + Math.floor((completedCount / totalChunks) * 80);
-      onProgress({ 
-          isProcessing: true, 
-          progress: Math.max(realProgress, virtualProgress), 
-          currentStep: step, 
-          totalChunks, 
-          processedChunks: completedCount 
+      onProgress({
+        isProcessing: true,
+        progress: Math.max(realProgress, virtualProgress),
+        currentStep: step,
+        totalChunks,
+        processedChunks: completedCount
       });
     };
 
     updateProgress(SYNTHESIS_MESSAGES[0]);
 
     const interpolationTimer = setInterval(() => {
-        if (virtualProgress < 92) {
-            virtualProgress += (0.8 + Math.random() * 1.2);
-            const msgIndex = Math.min(SYNTHESIS_MESSAGES.length - 1, Math.floor((virtualProgress / 95) * SYNTHESIS_MESSAGES.length));
-            const baseMsg = SYNTHESIS_MESSAGES[msgIndex];
-            updateProgress(baseMsg + (totalChunks > 1 ? ` (Segment ${completedCount + 1}/${totalChunks})` : ""));
-        }
+      if (virtualProgress < 92) {
+        virtualProgress += (0.8 + Math.random() * 1.2);
+        const msgIndex = Math.min(SYNTHESIS_MESSAGES.length - 1, Math.floor((virtualProgress / 95) * SYNTHESIS_MESSAGES.length));
+        const baseMsg = SYNTHESIS_MESSAGES[msgIndex];
+        updateProgress(baseMsg + (totalChunks > 1 ? ` (Segment ${completedCount + 1}/${totalChunks})` : ""));
+      }
     }, 800);
 
     const audioBuffers: AudioBuffer[] = new Array(totalChunks);
     const queue = chunks.map((chunk, index) => ({ chunk, index }));
 
     const worker = async () => {
-        while (queue.length > 0) {
-            const task = queue.shift();
-            if (!task) break;
-            const { chunk, index } = task;
-            try {
-                const buffer = await this.withRetry(() => this.fetchChunkAudio(chunk, config.voice), 0, signal);
-                audioBuffers[index] = buffer;
-                completedCount++;
-                updateProgress(`Segment ${completedCount}/${totalChunks} synthesized`);
-            } catch (error: any) {
-                clearInterval(interpolationTimer);
-                if (signal?.aborted) throw error;
-                throw new Error(`Synthesis failed at segment ${index + 1}.`);
-            }
+      while (queue.length > 0) {
+        const task = queue.shift();
+        if (!task) break;
+        const { chunk, index } = task;
+        try {
+          const buffer = await this.withRetry(() => this.fetchChunkAudio(chunk, config.voice), 0, signal);
+          audioBuffers[index] = buffer;
+          completedCount++;
+          updateProgress(`Segment ${completedCount}/${totalChunks} synthesized`);
+        } catch (error: any) {
+          clearInterval(interpolationTimer);
+          if (signal?.aborted) throw error;
+          throw new Error(`Synthesis failed at segment ${index + 1}.`);
         }
+      }
     };
 
     try {
-        await Promise.all(Array(Math.min(CONCURRENCY_LIMIT, totalChunks)).fill(null).map(() => worker()));
+      await Promise.all(Array(Math.min(CONCURRENCY_LIMIT, totalChunks)).fill(null).map(() => worker()));
     } finally {
-        clearInterval(interpolationTimer);
+      clearInterval(interpolationTimer);
     }
 
     onProgress({ isProcessing: true, progress: 95, currentStep: "Assembling audio stream...", totalChunks, processedChunks: totalChunks });
@@ -140,9 +145,10 @@ export class TTSService {
   }
 
   async translateText(text: string, targetLangCode: string): Promise<string> {
-    const response = await this.ai.models.generateContent({
-        model: TRANSLATION_MODEL,
-        contents: [{ parts: [{ text: `Translate to ${targetLangCode}. Return ONLY translation: "${text}"` }] }],
+    const ai = this.getAI();
+    const response = await ai.models.generateContent({
+      model: TRANSLATION_MODEL,
+      contents: [{ parts: [{ text: `Translate to ${targetLangCode}. Return ONLY translation: "${text}"` }] }],
     });
     return response.text?.trim() || "";
   }
@@ -154,7 +160,8 @@ export class TTSService {
   }
 
   private async fetchChunkAudio(text: string, voiceName: string): Promise<AudioBuffer> {
-    const response = await this.ai.models.generateContent({
+    const ai = this.getAI();
+    const response = await ai.models.generateContent({
       model: TTS_MODEL,
       contents: [{ parts: [{ text }] }],
       config: {

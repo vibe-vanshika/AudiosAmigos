@@ -8,6 +8,7 @@ import { AudioPlayer } from './components/AudioPlayer';
 import { ErrorDisplay } from './components/ErrorDisplay';
 import { HistoryPanel } from './components/HistoryPanel';
 import { BackgroundDecorations } from './components/BackgroundDecorations';
+import { ApiKeyModal } from './components/ApiKeyModal';
 import { TTSService } from './services/ttsService';
 import { TTSConfig, ProcessingState, VoiceName, ChunkTiming, SynthesisResult, HistoryItem } from './types';
 import { generateCacheKey, getCachedAudio, clearCache } from './utils/cache';
@@ -32,11 +33,12 @@ const App: React.FC = () => {
   const [processingState, setProcessingState] = useState<ProcessingState>({
     isProcessing: false, progress: 0, currentStep: 'Ready', totalChunks: 0, processedChunks: 0,
   });
+  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [generatedChunks, setGeneratedChunks] = useState<string[]>([]);
   const [chunkTimings, setChunkTimings] = useState<ChunkTiming[]>([]);
   const [isEditing, setIsEditing] = useState<boolean>(true);
-  const [, setCurrentTime] = useState(0); 
+  const [, setCurrentTime] = useState(0);
   const [activeChunkIndex, setActiveChunkIndex] = useState<number>(-1);
   const [estimatedWordIndex, setEstimatedWordIndex] = useState<number>(-1);
 
@@ -72,7 +74,7 @@ const App: React.FC = () => {
         .finally(() => {
           setIsTranslatingPreview(false);
         });
-      
+
       latestTranslationPromise.current = promise;
     }, 800);
 
@@ -98,9 +100,9 @@ const App: React.FC = () => {
 
       // 3. Play/Pause: Spacebar
       const activeElement = document.activeElement;
-      const isInputFocused = activeElement instanceof HTMLTextAreaElement || 
-                             activeElement instanceof HTMLInputElement;
-      
+      const isInputFocused = activeElement instanceof HTMLTextAreaElement ||
+        activeElement instanceof HTMLInputElement;
+
       if (e.key === ' ' && !isInputFocused) {
         e.preventDefault(); // Prevent scrolling
         if (!isEditing && audioUrl && audioRef.current) {
@@ -150,11 +152,11 @@ const App: React.FC = () => {
       if (config.language !== 'original') {
         if (lastTranslatedText.current?.source === text && lastTranslatedText.current?.lang === config.language) {
           textToSynthesize = lastTranslatedText.current.result;
-        } 
+        }
         else if (isTranslatingPreview && latestTranslationPromise.current) {
           setProcessingState({ isProcessing: true, progress: 5, currentStep: 'Finalizing background translation...', totalChunks: 0, processedChunks: 0 });
           textToSynthesize = await latestTranslationPromise.current;
-        } 
+        }
         else {
           setProcessingState({ isProcessing: true, progress: 5, currentStep: 'Syncing linguistic context...', totalChunks: 0, processedChunks: 0 });
           textToSynthesize = await ttsService.translateText(text, config.language);
@@ -164,7 +166,7 @@ const App: React.FC = () => {
       if (!textToSynthesize) throw new Error("Could not obtain text for synthesis.");
 
       const result = await ttsService.synthesize(textToSynthesize, config, (s) => setProcessingState(s), abortControllerRef.current.signal);
-      
+
       setAudioUrl(result.audioUrl);
       setGeneratedChunks(result.chunks);
       setChunkTimings(result.timings);
@@ -200,24 +202,37 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 flex flex-col items-center selection:bg-cyan-500/30">
       <BackgroundDecorations />
       <main className="w-full max-w-5xl relative z-10 flex flex-col items-center pb-20">
+        <button
+          onClick={() => setIsApiKeyModalOpen(true)}
+          className="fixed top-6 left-6 p-3 rounded-2xl bg-slate-900/50 backdrop-blur-xl border border-white/10 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all z-50 group active:scale-95 shadow-2xl"
+          title="Set Gemini API Key"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+          </svg>
+          <div className="absolute left-full ml-3 px-2 py-1 bg-slate-800 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-white/5">
+            API KEY
+          </div>
+        </button>
         <Header onOpenHistory={() => setShowHistoryModal(true)} />
         <div className="w-full">
-            <ControlPanel config={config} onChange={setConfig} disabled={processingState.isProcessing || !isEditing} onPreviewRequest={(v) => ttsService.previewVoice(v).then(u => new Audio(u).play())} />
-            {isEditing ? (
-              <>
-                <ContentDisplay text={text} onTextChange={setText} isProcessing={processingState.isProcessing} translationPreview={translationPreview} isTranslating={isTranslatingPreview} targetLanguage={config.language} onOpenHistory={() => setShowHistoryModal(true)} />
-                <ActionButtons isEditing={true} isProcessing={processingState.isProcessing} hasText={!!text.trim()} onGenerate={handleGenerate} onEdit={() => {}} onStop={() => abortControllerRef.current?.abort()} />
-              </>
-            ) : audioUrl && (
-              <div className="w-full flex flex-col items-center">
-                 <AudioPlayer audioUrl={audioUrl} audioRef={audioRef} generatedChunks={generatedChunks} activeChunkIndex={activeChunkIndex} estimatedWordIndex={estimatedWordIndex} />
-                 <button onClick={() => setIsEditing(true)} className="mt-8 px-8 py-3 rounded-full font-semibold bg-slate-900 border border-white/10 hover:border-cyan-500/30 text-slate-300 transition-all">Generate New</button>
-              </div>
-            )}
-            <ProgressBar state={processingState} />
-            {error && <ErrorDisplay message={error} />}
+          <ControlPanel config={config} onChange={setConfig} disabled={processingState.isProcessing || !isEditing} onPreviewRequest={(v) => ttsService.previewVoice(v).then(u => new Audio(u).play())} />
+          {isEditing ? (
+            <>
+              <ContentDisplay text={text} onTextChange={setText} isProcessing={processingState.isProcessing} translationPreview={translationPreview} isTranslating={isTranslatingPreview} targetLanguage={config.language} onOpenHistory={() => setShowHistoryModal(true)} />
+              <ActionButtons isEditing={true} isProcessing={processingState.isProcessing} hasText={!!text.trim()} onGenerate={handleGenerate} onEdit={() => { }} onStop={() => abortControllerRef.current?.abort()} />
+            </>
+          ) : audioUrl && (
+            <div className="w-full flex flex-col items-center">
+              <AudioPlayer audioUrl={audioUrl} audioRef={audioRef} generatedChunks={generatedChunks} activeChunkIndex={activeChunkIndex} estimatedWordIndex={estimatedWordIndex} />
+              <button onClick={() => setIsEditing(true)} className="mt-8 px-8 py-3 rounded-full font-semibold bg-slate-900 border border-white/10 hover:border-cyan-500/30 text-slate-300 transition-all">Generate New</button>
+            </div>
+          )}
+          <ProgressBar state={processingState} />
+          {error && <ErrorDisplay message={error} />}
         </div>
         <HistoryPanel history={history} isOpen={showHistoryModal} onClose={() => setShowHistoryModal(false)} onRestore={handleRestoreHistory} onDelete={handleDeleteHistory} onClearCache={clearCache} />
+        <ApiKeyModal isOpen={isApiKeyModalOpen} onClose={() => setIsApiKeyModalOpen(false)} />
       </main>
     </div>
   );
