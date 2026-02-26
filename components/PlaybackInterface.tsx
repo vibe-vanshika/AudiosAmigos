@@ -29,15 +29,20 @@ export const PlaybackInterface: React.FC<PlaybackInterfaceProps> = ({
   };
 
   const speeds = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
+  const percentage = (currentTime / (duration || 1)) * 100;
 
   return (
     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#020617] via-[#020617]/95 to-transparent pt-10 pb-4 px-4 md:px-6">
-      {/* Seek bar with larger touch area */}
+      {/* Seek bar with dot indicator */}
       <div className="relative w-full h-2 md:h-1.5 bg-slate-800 rounded-full mb-4 cursor-pointer group">
         <div 
-          className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 to-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.5)] rounded-full" 
-          style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
+          className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 to-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.5)] rounded-full transition-[width] duration-100" 
+          style={{ width: `${percentage}%` }}
         ></div>
+        <div
+          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.6)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+          style={{ left: `${percentage}%`, transform: `translate(-50%, -50%)` }}
+        />
         <input
           type="range"
           min="0"
@@ -53,7 +58,7 @@ export const PlaybackInterface: React.FC<PlaybackInterfaceProps> = ({
         <div className="flex items-center gap-3 md:gap-4">
           <button 
             onClick={onTogglePlay}
-            className="w-12 h-12 rounded-full bg-cyan-500 text-black flex items-center justify-center hover:bg-cyan-400 transition-all active:scale-95 flex-shrink-0"
+            className="w-12 h-12 rounded-full bg-cyan-500 text-black flex items-center justify-center hover:bg-cyan-400 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all duration-200 active:scale-[0.97] flex-shrink-0 focus-visible:ring-2 focus-visible:ring-cyan-400/30 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 outline-none"
           >
             {isPlaying ? (
               <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
@@ -62,7 +67,7 @@ export const PlaybackInterface: React.FC<PlaybackInterfaceProps> = ({
             )}
           </button>
           <div className="flex flex-col">
-            <span className="text-white font-mono text-xs md:text-sm font-bold tracking-widest">{formatTime(currentTime)}</span>
+            <span className="text-white font-display text-xs md:text-sm font-bold tracking-widest">{formatTime(currentTime)}</span>
             <span className="text-slate-500 text-xs font-mono">{formatTime(duration)}</span>
           </div>
         </div>
@@ -81,7 +86,7 @@ export const PlaybackInterface: React.FC<PlaybackInterfaceProps> = ({
           <a
             href={audioUrl}
             download={`lumina-export-${Date.now()}.wav`}
-            className="p-3 rounded-lg bg-slate-800/80 border border-white/5 text-slate-400 hover:text-white transition-all backdrop-blur-md min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="p-3 rounded-lg bg-slate-800/80 border border-white/5 text-slate-400 hover:text-cyan-400 transition-all duration-200 backdrop-blur-md min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-[0.97]"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

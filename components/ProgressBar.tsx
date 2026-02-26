@@ -31,7 +31,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ state }) => {
       <div className="flex justify-between text-xs text-slate-400 mb-2 font-mono tracking-wide">
         <span className="flex items-center gap-2">
             {!isExiting && <span className="w-2 h-2 rounded-full border-2 border-cyan-500 border-t-transparent animate-spin"></span>}
-            {isExiting ? "Generation Complete" : state.currentStep}
+            {isExiting ? <span className="text-emerald-400">Generation Complete</span> : state.currentStep}
         </span>
         <span className="text-cyan-400">{Math.round(state.progress)}%</span>
       </div>

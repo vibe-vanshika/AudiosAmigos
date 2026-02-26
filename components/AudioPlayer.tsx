@@ -60,7 +60,7 @@ export const AudioPlayer: React.FC<AudioPlayerProps> = ({
   }, [playbackRate]);
 
   return (
-    <div className="glass-card rounded-2xl overflow-hidden animate-slide-up flex flex-col w-full max-w-5xl mx-auto shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 relative">
+    <div className="glass-card rounded-2xl overflow-hidden animate-slide-up flex flex-col w-full max-w-5xl mx-auto shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 relative" style={{ animationDelay: '0.1s' }}>
       <audio ref={audioRef} src={audioUrl} crossOrigin="anonymous" autoPlay />
       <WaveVisualizer analyser={analyserRef.current} />
       <TranscriptHighlighter

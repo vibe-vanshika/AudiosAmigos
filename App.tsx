@@ -212,7 +212,10 @@ const App: React.FC = () => {
           ) : audioUrl && (
             <div className="w-full flex flex-col items-center">
               <AudioPlayer audioUrl={audioUrl} audioRef={audioRef} generatedChunks={generatedChunks} activeChunkIndex={activeChunkIndex} estimatedWordIndex={estimatedWordIndex} />
-              <button onClick={() => setIsEditing(true)} className="mt-6 md:mt-8 px-8 py-3 rounded-full font-semibold bg-slate-900 border border-white/10 hover:border-cyan-500/30 text-slate-300 transition-all active:scale-95">Generate New</button>
+              <button onClick={() => setIsEditing(true)} className="group mt-6 md:mt-8 px-8 py-3 rounded-full font-semibold bg-slate-900 border border-white/10 hover:border-cyan-500/20 text-slate-300 transition-all duration-200 active:scale-[0.97] flex items-center gap-2 hover:gap-3 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-cyan-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 outline-none">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                Generate New
+              </button>
             </div>
           )}
           <ProgressBar state={processingState} />

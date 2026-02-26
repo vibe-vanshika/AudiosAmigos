@@ -71,7 +71,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
                             value={apiKey}
                             onChange={(e) => setApiKey(e.target.value)}
                             placeholder="Paste your API key here..."
-                            className="w-full bg-slate-950 border border-white/10 rounded-xl py-3.5 pl-10 pr-4 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all font-mono text-sm"
+                            className="w-full bg-slate-950 border border-white/10 rounded-xl py-3.5 pl-10 pr-4 text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all duration-200 font-mono text-sm"
                         />
                     </div>
 
@@ -87,7 +87,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose }) => 
                             disabled={isSaved}
                             className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all flex items-center gap-2 border border-white/10 min-h-[44px] ${isSaved
                                 ? 'bg-green-500/20 text-green-400 border-green-500/30'
-                                : 'bg-slate-900 text-white hover:bg-slate-800 shadow-xl active:scale-95'
+                                : 'bg-slate-900 text-white hover:bg-slate-800 shadow-xl active:scale-[0.97]'
                                 }`}
                         >
                             {isSaved ? (

@@ -26,7 +26,7 @@ export const VoiceSelector: React.FC<VoiceSelectorProps> = ({ value, onChange, d
   const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
   return (
-    <div className="glass-card rounded-2xl p-4 flex flex-col gap-2 group hover:border-violet-500/30 transition-colors">
+    <div className="glass-card rounded-2xl p-4 flex flex-col gap-2 group hover:border-violet-500/20 hover:-translate-y-0.5 hover:shadow-[inset_0_1px_0_rgba(139,92,246,0.1),0_8px_30px_-5px_rgba(0,0,0,0.5)] transition-all duration-300">
       <label className="text-xs font-semibold text-violet-300 uppercase tracking-widest flex items-center gap-2">
         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
@@ -39,7 +39,7 @@ export const VoiceSelector: React.FC<VoiceSelectorProps> = ({ value, onChange, d
             value={value}
             onChange={(e) => onChange(e.target.value as VoiceName)}
             disabled={disabled}
-            className="w-full appearance-none bg-black/20 border border-white/5 text-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-violet-500 focus:bg-white/5 hover:bg-white/5 transition-all text-sm font-medium cursor-pointer"
+            className="w-full appearance-none bg-black/20 border border-white/5 text-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-violet-500 focus:bg-white/5 hover:bg-white/5 transition-all duration-200 text-sm font-medium cursor-pointer"
           >
             {Object.values(VoiceName).map((voice) => (
               <option key={voice} value={voice} className="bg-slate-900 text-slate-300">
@@ -54,7 +54,7 @@ export const VoiceSelector: React.FC<VoiceSelectorProps> = ({ value, onChange, d
         <button
           onClick={handlePreview}
           disabled={disabled || isPreviewing}
-          className="w-11 h-11 flex items-center justify-center rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 hover:bg-violet-500 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-95"
+          className="group/play w-11 h-11 flex items-center justify-center rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 hover:bg-violet-500 hover:text-white hover:shadow-lg transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-violet-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 outline-none"
         >
           {isPreviewing ? (
             <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
@@ -62,7 +62,7 @@ export const VoiceSelector: React.FC<VoiceSelectorProps> = ({ value, onChange, d
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
           ) : (
-            <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+            <svg className="h-4 w-4 fill-current transition-transform duration-200 group-hover/play:translate-x-[1px]" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
           )}
         </button>
       </div>

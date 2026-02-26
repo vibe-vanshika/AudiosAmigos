@@ -23,14 +23,18 @@ export const BackgroundDecorations: React.FC = () => {
   const starCount = isMobile ? 20 : 40;
 
   const stars = useMemo(() => {
-    return Array.from({ length: starCount }).map((_, i) => ({
-      id: i,
-      left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 100}%`,
-      size: Math.random() > 0.9 ? '3px' : '2px',
-      duration: `${10 + Math.random() * 15}s`,
-      delay: `${Math.random() * 20}s`
-    }));
+    return Array.from({ length: starCount }).map((_, i) => {
+      const isLarge = Math.random() > 0.9;
+      return {
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        size: isLarge ? '3px' : '2px',
+        color: isLarge ? 'bg-cyan-200' : 'bg-white',
+        duration: `${10 + Math.random() * 15}s`,
+        delay: `${Math.random() * 20}s`
+      };
+    });
   }, [starCount]);
 
   if (prefersReducedMotion) {
@@ -52,6 +56,7 @@ export const BackgroundDecorations: React.FC = () => {
         style={{ background: 'radial-gradient(circle at 50% 50%, #1a1b26 0%, #050505 100%)' }}
       ></div>
 
+      {/* Indigo nebula - bottom left */}
       <div 
         className="absolute bottom-[-10%] left-[-10%] w-[70vw] h-[70vw] rounded-full mix-blend-screen filter blur-[100px] opacity-[0.05]"
         style={{
@@ -61,6 +66,7 @@ export const BackgroundDecorations: React.FC = () => {
         }}
       ></div>
 
+      {/* Slate nebula - top right */}
       <div 
         className="absolute top-[-20%] right-[-10%] w-[80vw] h-[80vw] rounded-full mix-blend-screen filter blur-[120px] opacity-[0.04]"
         style={{
@@ -69,7 +75,18 @@ export const BackgroundDecorations: React.FC = () => {
           willChange: 'transform, opacity',
         }}
       ></div>
+
+      {/* Warm amber nebula - center right */}
+      <div 
+        className="absolute top-[30%] right-[10%] w-[40vw] h-[40vw] rounded-full mix-blend-screen filter blur-[100px] opacity-[0.02]"
+        style={{
+          background: 'radial-gradient(circle, #92400e 0%, transparent 60%)',
+          animation: 'nebula-breath 18s ease-in-out infinite',
+          willChange: 'transform, opacity',
+        }}
+      ></div>
       
+      {/* Cyan accent - center */}
       <div 
         className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] rounded-full mix-blend-overlay filter blur-[100px] opacity-[0.03]"
         style={{ background: 'radial-gradient(circle, #0891b2 0%, transparent 60%)' }}
@@ -78,7 +95,7 @@ export const BackgroundDecorations: React.FC = () => {
       {stars.map((star) => (
         <div
           key={star.id}
-          className="absolute rounded-full bg-white"
+          className={`absolute rounded-full ${star.color}`}
           style={{
             left: star.left,
             top: star.top,
@@ -94,7 +111,7 @@ export const BackgroundDecorations: React.FC = () => {
         />
       ))}
       
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.025] mix-blend-overlay"></div>
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.035] mix-blend-overlay"></div>
     </div>
   );
 };

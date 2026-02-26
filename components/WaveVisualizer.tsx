@@ -50,8 +50,9 @@ export const WaveVisualizer: React.FC<WaveVisualizerProps> = ({ analyser }) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const gradient = ctx.createLinearGradient(0, height, 0, 0);
-      gradient.addColorStop(0, 'rgba(56, 189, 248, 0.0)');
-      gradient.addColorStop(0.5, 'rgba(56, 189, 248, 0.4)');
+      gradient.addColorStop(0, 'rgba(139, 92, 246, 0.0)');
+      gradient.addColorStop(0.3, 'rgba(139, 92, 246, 0.2)');
+      gradient.addColorStop(0.6, 'rgba(56, 189, 248, 0.4)');
       gradient.addColorStop(1, 'rgba(255, 255, 255, 0.9)');
 
       ctx.fillStyle = gradient;
@@ -74,6 +75,8 @@ export const WaveVisualizer: React.FC<WaveVisualizerProps> = ({ analyser }) => {
   return (
     <div ref={containerRef} className="w-full h-24 md:h-32 bg-[#020617] relative border-b border-white/5 shadow-xl">
       <canvas ref={canvasRef} className="w-full h-full opacity-80" />
+      {/* Reflection overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] via-transparent to-transparent pointer-events-none"></div>
       <div className="absolute inset-0 bg-[linear-gradient(rgba(18,22,40,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,6px_100%] pointer-events-none"></div>
     </div>
   );

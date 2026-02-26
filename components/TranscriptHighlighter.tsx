@@ -29,13 +29,25 @@ export const TranscriptHighlighter: React.FC<TranscriptHighlighterProps> = ({
         const words = chunk.split(/\s+/);
 
         return (
-          <div key={cIdx} data-chunk-index={cIdx} className={`mb-4 md:mb-8 transition-all duration-500 ease-out ${isActiveChunk ? 'opacity-100' : 'opacity-40 blur-[0.5px]'}`}>
+          <div
+            key={cIdx}
+            data-chunk-index={cIdx}
+            className={`mb-4 md:mb-8 transition-all duration-500 ease-out ${
+              isActiveChunk
+                ? 'opacity-100 border-l-2 border-cyan-500/30 pl-4'
+                : 'opacity-40 blur-[0.3px]'
+            }`}
+          >
             {words.map((word, wIdx) => {
               const isCurrentWord = isActiveChunk && wIdx === estimatedWordIndex;
               return (
                 <span
                   key={`${cIdx}-${wIdx}`}
-                  className={`inline-block mr-1.5 transition-colors duration-200 ${isCurrentWord ? 'text-cyan-400 font-semibold drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]' : 'text-slate-300'}`}
+                  className={`inline-block mr-1.5 transition-all duration-150 ${
+                    isCurrentWord
+                      ? 'text-cyan-400 font-semibold tracking-wide scale-[1.02] drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]'
+                      : 'text-slate-300'
+                  }`}
                 >
                   {word}
                 </span>

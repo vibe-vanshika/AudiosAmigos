@@ -22,7 +22,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
       {isProcessing ? (
           <button
             onClick={onStop}
-            className="group relative w-full md:w-auto px-8 py-4 rounded-xl md:rounded-full font-bold text-lg tracking-wide transition-all duration-300 bg-red-950/30 text-red-400 border border-red-500/20 hover:bg-red-900/40 hover:border-red-500/40 flex items-center justify-center gap-3"
+            className="group relative w-full md:w-auto px-8 py-4 rounded-xl md:rounded-full font-bold text-lg tracking-wide transition-all duration-200 bg-red-950/30 text-red-400 border border-red-500/20 hover:bg-red-900/40 hover:border-red-500/40 flex items-center justify-center gap-3 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-red-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 outline-none"
           >
              <span className="relative flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-50"></span>
@@ -35,15 +35,15 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
           onClick={onGenerate}
           disabled={!hasText}
           className={`
-            group relative w-full md:w-auto px-8 py-4 rounded-xl md:rounded-full font-bold text-lg tracking-wide transition-all duration-300 flex items-center justify-center
+            group relative w-full md:w-auto px-8 py-4 rounded-xl md:rounded-full font-bold text-lg tracking-wide transition-all duration-200 flex items-center justify-center focus-visible:ring-2 focus-visible:ring-cyan-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 outline-none active:scale-[0.97]
             ${!hasText
               ? 'bg-slate-900 text-slate-600 cursor-not-allowed border border-white/5'
-              : 'text-white hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] hover:border-cyan-500/30 border border-transparent'
+              : 'text-white hover:shadow-[0_0_40px_rgba(6,182,212,0.35)] hover:border-cyan-500/30 border border-transparent animate-glow-pulse'
             }
           `}
         >
             {hasText && (
-                <div className="absolute inset-0 rounded-xl md:rounded-full bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 opacity-100 group-hover:opacity-90 transition-opacity"></div>
+                <div className="absolute inset-0 rounded-xl md:rounded-full bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 opacity-100 group-hover:opacity-90 transition-opacity duration-200"></div>
             )}
             
             <span className="relative flex items-center gap-2">
@@ -54,7 +54,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
       ) : (
         <button
           onClick={onEdit}
-          className="w-full md:w-auto px-8 py-3 rounded-xl md:rounded-full font-semibold text-base tracking-wide shadow-lg bg-slate-900 border border-white/10 hover:bg-slate-800 text-slate-300 transition-all hover:border-cyan-500/30 flex items-center justify-center gap-2"
+          className="w-full md:w-auto px-8 py-3 rounded-xl md:rounded-full font-semibold text-base tracking-wide shadow-lg bg-slate-900 border border-white/10 hover:bg-slate-800 text-slate-300 transition-all duration-200 hover:border-cyan-500/30 flex items-center justify-center gap-2 active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-cyan-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 outline-none"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
           Refine Input
