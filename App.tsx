@@ -221,7 +221,7 @@ const App: React.FC = () => {
           <ProgressBar state={processingState} />
           {error && <ErrorDisplay message={error} onDismiss={handleDismissError} />}
         </div>
-        <HistoryPanel history={history} isOpen={showHistoryModal} onClose={() => setShowHistoryModal(false)} onRestore={handleRestoreHistory} onDelete={handleDeleteHistory} onClearCache={clearCache} />
+        <HistoryPanel history={history} isOpen={showHistoryModal} onClose={() => setShowHistoryModal(false)} onRestore={handleRestoreHistory} onDelete={handleDeleteHistory} onClearCache={() => { clearCache(); setHistory([]); }} />
         <ApiKeyModal isOpen={isApiKeyModalOpen} onClose={() => setIsApiKeyModalOpen(false)} />
         <footer className="w-full py-4 md:py-8 mt-6 md:mt-12 border-t border-white/5 flex justify-center">
           <p className="text-slate-500 text-xs font-medium tracking-wider">
