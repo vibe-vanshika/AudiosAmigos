@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ControlPanel } from './components/ControlPanel';
 import { ProgressBar } from './components/ProgressBar';
 import { Header } from './components/Header';
@@ -51,7 +51,6 @@ const App: React.FC = () => {
   useEffect(() => { localStorage.setItem('lumina_config', JSON.stringify(config)); }, [config]);
   useEffect(() => { localStorage.setItem('lumina_history', JSON.stringify(history)); }, [history]);
 
-  // Debounced Real-time Translation
   useEffect(() => {
     if (config.language === 'original' || !text.trim()) {
       setTranslationPreview('');
@@ -81,30 +80,26 @@ const App: React.FC = () => {
     return () => clearTimeout(timer);
   }, [text, config.language]);
 
-  // Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // 1. Generate: Ctrl+Enter or Cmd+Enter
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         if (isEditing && !!text.trim() && !processingState.isProcessing) {
           handleGenerate();
         }
       }
 
-      // 2. Stop: Escape
       if (e.key === 'Escape') {
         if (processingState.isProcessing) {
           abortControllerRef.current?.abort();
         }
       }
 
-      // 3. Play/Pause: Spacebar
       const activeElement = document.activeElement;
       const isInputFocused = activeElement instanceof HTMLTextAreaElement ||
         activeElement instanceof HTMLInputElement;
 
       if (e.key === ' ' && !isInputFocused) {
-        e.preventDefault(); // Prevent scrolling
+        e.preventDefault();
         if (!isEditing && audioUrl && audioRef.current) {
           if (audioRef.current.paused) {
             audioRef.current.play();
@@ -119,7 +114,6 @@ const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isEditing, text, processingState.isProcessing, audioUrl, config]);
 
-  // Highlight Tracking
   useEffect(() => {
     let animationFrameId: number;
     const update = () => {
@@ -198,43 +192,35 @@ const App: React.FC = () => {
     setHistory(prev => prev.filter(item => item.id !== id));
   };
 
+  const handleDismissError = useCallback(() => setError(null), []);
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 flex flex-col items-center selection:bg-cyan-500/30">
+    <div className="min-h-screen bg-slate-950 text-slate-100 p-3 md:p-8 flex flex-col items-center selection:bg-cyan-500/30">
       <BackgroundDecorations />
-      <main className="w-full max-w-5xl relative z-10 flex flex-col items-center pb-20">
-        <button
-          onClick={() => setIsApiKeyModalOpen(true)}
-          className="fixed bottom-6 left-6 p-3 rounded-2xl bg-slate-900/50 backdrop-blur-xl border border-white/10 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/30 transition-all z-50 group active:scale-95 shadow-2xl"
-          title="Set Gemini API Key"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M15 6a3 3 0 1 0-6 0 3 3 0 0 0 6 0" />
-            <path d="M12 9v12m0 0h3m-3 0h-3m4-6h-4" />
-          </svg>
-          <div className="absolute left-full ml-3 px-2 py-1 bg-slate-800 text-white text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap border border-white/5">
-            API KEY
-          </div>
-        </button>
-        <Header onOpenHistory={() => setShowHistoryModal(true)} />
+      <main className="w-full max-w-5xl relative z-10 flex flex-col items-center pb-10 md:pb-20">
+        <Header
+          onOpenHistory={() => setShowHistoryModal(true)}
+          onOpenApiKey={() => setIsApiKeyModalOpen(true)}
+        />
         <div className="w-full">
           <ControlPanel config={config} onChange={setConfig} disabled={processingState.isProcessing || !isEditing} onPreviewRequest={(v) => ttsService.previewVoice(v).then(u => new Audio(u).play())} />
           {isEditing ? (
             <>
-              <ContentDisplay text={text} onTextChange={setText} isProcessing={processingState.isProcessing} translationPreview={translationPreview} isTranslating={isTranslatingPreview} targetLanguage={config.language} onOpenHistory={() => setShowHistoryModal(true)} />
+              <ContentDisplay text={text} onTextChange={setText} isProcessing={processingState.isProcessing} translationPreview={translationPreview} isTranslating={isTranslatingPreview} targetLanguage={config.language} />
               <ActionButtons isEditing={true} isProcessing={processingState.isProcessing} hasText={!!text.trim()} onGenerate={handleGenerate} onEdit={() => { }} onStop={() => abortControllerRef.current?.abort()} />
             </>
           ) : audioUrl && (
             <div className="w-full flex flex-col items-center">
               <AudioPlayer audioUrl={audioUrl} audioRef={audioRef} generatedChunks={generatedChunks} activeChunkIndex={activeChunkIndex} estimatedWordIndex={estimatedWordIndex} />
-              <button onClick={() => setIsEditing(true)} className="mt-8 px-8 py-3 rounded-full font-semibold bg-slate-900 border border-white/10 hover:border-cyan-500/30 text-slate-300 transition-all">Generate New</button>
+              <button onClick={() => setIsEditing(true)} className="mt-6 md:mt-8 px-8 py-3 rounded-full font-semibold bg-slate-900 border border-white/10 hover:border-cyan-500/30 text-slate-300 transition-all active:scale-95">Generate New</button>
             </div>
           )}
           <ProgressBar state={processingState} />
-          {error && <ErrorDisplay message={error} />}
+          {error && <ErrorDisplay message={error} onDismiss={handleDismissError} />}
         </div>
         <HistoryPanel history={history} isOpen={showHistoryModal} onClose={() => setShowHistoryModal(false)} onRestore={handleRestoreHistory} onDelete={handleDeleteHistory} onClearCache={clearCache} />
         <ApiKeyModal isOpen={isApiKeyModalOpen} onClose={() => setIsApiKeyModalOpen(false)} />
-        <footer className="w-full py-8 mt-12 border-t border-white/5 flex justify-center">
+        <footer className="w-full py-4 md:py-8 mt-6 md:mt-12 border-t border-white/5 flex justify-center">
           <p className="text-slate-500 text-xs font-medium tracking-wider">
             &copy; 2026 Technited Minds
           </p>

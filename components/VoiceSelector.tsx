@@ -39,7 +39,7 @@ export const VoiceSelector: React.FC<VoiceSelectorProps> = ({ value, onChange, d
             value={value}
             onChange={(e) => onChange(e.target.value as VoiceName)}
             disabled={disabled}
-            className="w-full appearance-none bg-black/20 border border-white/5 text-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-violet-500 focus:bg-white/5 hover:bg-white/5 transition-all text-sm font-medium cursor-pointer"
+            className="w-full appearance-none bg-black/20 border border-white/5 text-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-violet-500 focus:bg-white/5 hover:bg-white/5 transition-all text-sm font-medium cursor-pointer"
           >
             {Object.values(VoiceName).map((voice) => (
               <option key={voice} value={voice} className="bg-slate-900 text-slate-300">
@@ -54,7 +54,7 @@ export const VoiceSelector: React.FC<VoiceSelectorProps> = ({ value, onChange, d
         <button
           onClick={handlePreview}
           disabled={disabled || isPreviewing}
-          className="w-10 h-10 flex items-center justify-center rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 hover:bg-violet-500 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed group-hover:scale-105"
+          className="w-11 h-11 flex items-center justify-center rounded-xl bg-violet-500/10 border border-violet-500/20 text-violet-400 hover:bg-violet-500 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed active:scale-95"
         >
           {isPreviewing ? (
             <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">

@@ -178,3 +178,19 @@ h6 {
         background-position: 0% 50%;
     }
 }
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+    .animate-float,
+    .animate-slide-up,
+    .animate-collapse-out,
+    .animate-pulse,
+    .animate-spin,
+    .animate-ping,
+    .animate-fade-in,
+    .animate-scale-up {
+        animation: none !important;
+        transition: none !important;
+    }
+}

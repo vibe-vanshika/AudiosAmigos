@@ -14,6 +14,9 @@ export default {
                 display: ['Manrope', 'sans-serif'],
                 mono: ['JetBrains Mono', 'monospace'],
             },
+            spacing: {
+                'touch': '44px',
+            },
             animation: {
                 'fade-in': 'fadeIn 0.5s ease-out forwards',
                 'scale-up': 'scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',

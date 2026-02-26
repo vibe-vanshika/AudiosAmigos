@@ -27,7 +27,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ state }) => {
   if (!shouldRender) return null;
 
   return (
-    <div className={`w-full mb-8 px-4 ${isExiting ? 'animate-collapse-out' : 'animate-slide-up'}`}>
+    <div className={`w-full mb-6 md:mb-8 px-0 md:px-4 ${isExiting ? 'animate-collapse-out' : 'animate-slide-up'}`}>
       <div className="flex justify-between text-xs text-slate-400 mb-2 font-mono tracking-wide">
         <span className="flex items-center gap-2">
             {!isExiting && <span className="w-2 h-2 rounded-full border-2 border-cyan-500 border-t-transparent animate-spin"></span>}

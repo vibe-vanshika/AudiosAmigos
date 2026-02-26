@@ -18,7 +18,7 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   onStop
 }) => {
   return (
-    <div className="flex justify-center mb-10 w-full animate-slide-up z-20" style={{ animationDelay: '0.3s' }}>
+    <div className="flex justify-center mb-6 md:mb-10 w-full animate-slide-up z-20" style={{ animationDelay: '0.3s' }}>
       {isProcessing ? (
           <button
             onClick={onStop}

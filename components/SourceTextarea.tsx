@@ -6,10 +6,9 @@ interface SourceTextareaProps {
   onChange: (val: string) => void;
   disabled: boolean;
   showLabels: boolean;
-  onOpenHistory: () => void;
 }
 
-export const SourceTextarea: React.FC<SourceTextareaProps> = ({ value, onChange, disabled, showLabels, onOpenHistory }) => {
+export const SourceTextarea: React.FC<SourceTextareaProps> = ({ value, onChange, disabled, showLabels }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isExtracting, setIsExtracting] = useState(false);
@@ -49,19 +48,8 @@ export const SourceTextarea: React.FC<SourceTextareaProps> = ({ value, onChange,
 
   return (
     <div className={`flex flex-col ${showLabels ? 'w-full md:w-1/2' : 'w-full'} relative`}>
-      <div className="px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-black/30 border-b border-white/5 flex justify-between items-center z-20 min-h-[44px]">
-        <div className="flex items-center gap-3">
-          <span>{showLabels ? 'Original' : 'Source Content'}</span>
-          {!showLabels && (
-             <button 
-               onClick={onOpenHistory}
-               className="text-[9px] text-slate-600 hover:text-cyan-400 flex items-center gap-1 transition-colors"
-             >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                History
-             </button>
-          )}
-        </div>
+      <div className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-500 bg-black/30 border-b border-white/5 flex justify-between items-center z-20 min-h-[44px]">
+        <span>{showLabels ? 'Original' : 'Source Content'}</span>
         
         <div className="flex items-center gap-2">
           <input 
@@ -77,11 +65,11 @@ export const SourceTextarea: React.FC<SourceTextareaProps> = ({ value, onChange,
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={disabled || isExtracting}
-              className="text-cyan-600 hover:text-cyan-400 disabled:opacity-30 transition-colors uppercase tracking-tighter text-[9px] flex items-center gap-1.5 py-1.5 px-2.5 rounded bg-white/5 hover:bg-white/10"
+              className="text-cyan-600 hover:text-cyan-400 disabled:opacity-30 transition-colors uppercase tracking-tight text-xs flex items-center gap-1.5 py-2 px-3 rounded-lg bg-white/5 hover:bg-white/10 min-h-[36px]"
             >
               {isExtracting ? (
-                <span className="flex items-center gap-1">
-                  <svg className="animate-spin h-2 w-2" viewBox="0 0 24 24">
+                <span className="flex items-center gap-1.5">
+                  <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
@@ -89,7 +77,7 @@ export const SourceTextarea: React.FC<SourceTextareaProps> = ({ value, onChange,
                 </span>
               ) : (
                 <>
-                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
                   Import
@@ -100,19 +88,19 @@ export const SourceTextarea: React.FC<SourceTextareaProps> = ({ value, onChange,
 
           {value.length > 0 && !disabled && !isExtracting && (
             showClearConfirm ? (
-              <div className="flex items-center gap-2 bg-red-500/10 px-2 py-1 rounded border border-red-500/20 animate-slide-up shadow-lg">
-                <span className="text-red-400 text-[8px] font-black">RESET?</span>
+              <div className="flex items-center gap-2 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20 animate-slide-up shadow-lg">
+                <span className="text-red-400 text-xs font-black">RESET?</span>
                 <button 
                   type="button"
                   onClick={handleConfirmClear}
-                  className="text-white hover:text-red-400 transition-colors uppercase tracking-tighter text-[9px] font-black"
+                  className="text-white hover:text-red-400 transition-colors uppercase tracking-tight text-xs font-black py-1 px-2 min-h-[32px]"
                 >
                   YES
                 </button>
                 <button 
                   type="button"
                   onClick={() => setShowClearConfirm(false)}
-                  className="text-slate-500 hover:text-slate-200 transition-colors uppercase tracking-tighter text-[9px]"
+                  className="text-slate-500 hover:text-slate-200 transition-colors uppercase tracking-tight text-xs py-1 px-2 min-h-[32px]"
                 >
                   NO
                 </button>
@@ -121,7 +109,7 @@ export const SourceTextarea: React.FC<SourceTextareaProps> = ({ value, onChange,
               <button 
                 type="button"
                 onClick={() => setShowClearConfirm(true)}
-                className="text-slate-500 hover:text-red-400 transition-colors uppercase tracking-tighter text-[9px] py-1.5 px-2.5 rounded hover:bg-red-500/5 cursor-pointer"
+                className="text-slate-500 hover:text-red-400 transition-colors uppercase tracking-tight text-xs py-2 px-3 rounded-lg hover:bg-red-500/5 cursor-pointer min-h-[36px]"
               >
                 Clear
               </button>
@@ -134,7 +122,7 @@ export const SourceTextarea: React.FC<SourceTextareaProps> = ({ value, onChange,
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Type, paste, or import a file..."
-        className="w-full min-h-[350px] bg-transparent text-lg text-slate-200 p-8 pb-20 focus:outline-none resize-none placeholder:text-slate-800 font-light leading-relaxed font-sans selection:bg-cyan-500/20"
+        className="w-full min-h-[200px] md:min-h-[350px] bg-transparent text-base md:text-lg text-slate-200 p-4 md:p-8 pb-14 md:pb-20 focus:outline-none resize-none placeholder:text-slate-800 font-light leading-relaxed font-sans selection:bg-cyan-500/20"
         disabled={disabled || isExtracting}
       />
     </div>

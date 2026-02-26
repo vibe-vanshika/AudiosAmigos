@@ -31,8 +31,9 @@ export const PlaybackInterface: React.FC<PlaybackInterfaceProps> = ({
   const speeds = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#020617] via-[#020617]/95 to-transparent pt-10 pb-4 px-6">
-      <div className="relative w-full h-1.5 bg-slate-800 rounded-full mb-4 cursor-pointer group">
+    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#020617] via-[#020617]/95 to-transparent pt-10 pb-4 px-4 md:px-6">
+      {/* Seek bar with larger touch area */}
+      <div className="relative w-full h-2 md:h-1.5 bg-slate-800 rounded-full mb-4 cursor-pointer group">
         <div 
           className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 to-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.5)] rounded-full" 
           style={{ width: `${(currentTime / (duration || 1)) * 100}%` }}
@@ -44,15 +45,15 @@ export const PlaybackInterface: React.FC<PlaybackInterfaceProps> = ({
           step="0.1"
           value={currentTime}
           onChange={(e) => onSeek(parseFloat(e.target.value))}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          className="absolute -inset-y-3 inset-x-0 w-full h-[calc(100%+24px)] opacity-0 cursor-pointer"
         />
       </div>
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 md:gap-4">
           <button 
             onClick={onTogglePlay}
-            className="w-12 h-12 rounded-full bg-cyan-500 text-black flex items-center justify-center hover:bg-cyan-400 transition-all active:scale-95"
+            className="w-12 h-12 rounded-full bg-cyan-500 text-black flex items-center justify-center hover:bg-cyan-400 transition-all active:scale-95 flex-shrink-0"
           >
             {isPlaying ? (
               <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
@@ -61,18 +62,18 @@ export const PlaybackInterface: React.FC<PlaybackInterfaceProps> = ({
             )}
           </button>
           <div className="flex flex-col">
-            <span className="text-white font-mono text-sm font-bold tracking-widest">{formatTime(currentTime)}</span>
+            <span className="text-white font-mono text-xs md:text-sm font-bold tracking-widest">{formatTime(currentTime)}</span>
             <span className="text-slate-500 text-xs font-mono">{formatTime(duration)}</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 bg-slate-800/80 rounded-lg px-3 py-2 border border-white/5 backdrop-blur-md">
-            <span className="text-[10px] uppercase text-slate-400 font-bold">Speed</span>
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="flex items-center gap-1.5 md:gap-2 bg-slate-800/80 rounded-lg px-2.5 md:px-3 py-2.5 border border-white/5 backdrop-blur-md min-h-[44px]">
+            <span className="text-xs uppercase text-slate-400 font-bold hidden sm:inline">Speed</span>
             <select 
               value={playbackRate}
               onChange={(e) => onRateChange(parseFloat(e.target.value))}
-              className="bg-transparent text-cyan-400 text-sm font-mono font-bold focus:outline-none cursor-pointer"
+              className="bg-transparent text-cyan-400 text-sm font-mono font-bold focus:outline-none cursor-pointer min-h-[24px]"
             >
               {speeds.map(s => <option key={s} value={s} className="bg-slate-900">{s}x</option>)}
             </select>
@@ -80,7 +81,7 @@ export const PlaybackInterface: React.FC<PlaybackInterfaceProps> = ({
           <a
             href={audioUrl}
             download={`lumina-export-${Date.now()}.wav`}
-            className="p-3 rounded-lg bg-slate-800/80 border border-white/5 text-slate-400 hover:text-white transition-all backdrop-blur-md"
+            className="p-3 rounded-lg bg-slate-800/80 border border-white/5 text-slate-400 hover:text-white transition-all backdrop-blur-md min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

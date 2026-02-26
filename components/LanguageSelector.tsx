@@ -21,7 +21,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({ value, onCha
           value={value}
           onChange={(e) => onChange(e.target.value as LanguageCode)}
           disabled={disabled}
-          className="w-full appearance-none bg-black/20 border border-white/5 text-slate-200 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:bg-white/5 hover:bg-white/5 transition-all text-sm font-medium cursor-pointer"
+          className="w-full appearance-none bg-black/20 border border-white/5 text-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-fuchsia-500 focus:bg-white/5 hover:bg-white/5 transition-all text-sm font-medium cursor-pointer"
         >
           {LANGUAGES.map((lang) => (
             <option key={lang.code} value={lang.code} className="bg-slate-900 text-slate-300">

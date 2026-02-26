@@ -23,13 +23,13 @@ export const TranscriptHighlighter: React.FC<TranscriptHighlighterProps> = ({
   }, [activeChunkIndex]);
 
   return (
-    <div ref={containerRef} className="w-full bg-slate-900/50 min-h-[400px] max-h-[60vh] overflow-y-auto p-8 custom-scrollbar text-lg leading-loose relative">
+    <div ref={containerRef} className="w-full bg-slate-900/50 min-h-[250px] md:min-h-[400px] max-h-[60vh] overflow-y-auto p-4 md:p-8 custom-scrollbar text-base md:text-lg leading-loose relative">
       {generatedChunks.map((chunk, cIdx) => {
         const isActiveChunk = cIdx === activeChunkIndex;
         const words = chunk.split(/\s+/);
 
         return (
-          <div key={cIdx} data-chunk-index={cIdx} className={`mb-8 transition-all duration-500 ease-out ${isActiveChunk ? 'opacity-100' : 'opacity-40 blur-[0.5px]'}`}>
+          <div key={cIdx} data-chunk-index={cIdx} className={`mb-4 md:mb-8 transition-all duration-500 ease-out ${isActiveChunk ? 'opacity-100' : 'opacity-40 blur-[0.5px]'}`}>
             {words.map((word, wIdx) => {
               const isCurrentWord = isActiveChunk && wIdx === estimatedWordIndex;
               return (
@@ -44,7 +44,7 @@ export const TranscriptHighlighter: React.FC<TranscriptHighlighterProps> = ({
           </div>
         );
       })}
-      <div className="h-24"></div>
+      <div className="h-16 md:h-24"></div>
     </div>
   );
 };
