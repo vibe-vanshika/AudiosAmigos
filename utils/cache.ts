@@ -2,6 +2,7 @@ import { ChunkTiming, TTSConfig } from "../types";
 
 const DB_NAME = 'lumina_tts_db';
 const STORE_NAME = 'audio_cache';
+const CHUNK_STORE_NAME = 'chunk_audio_cache';
 
 interface CacheEntry {
     key: string;
@@ -11,15 +12,24 @@ interface CacheEntry {
     timestamp: number;
 }
 
+interface ChunkCacheEntry {
+    key: string;
+    pcmBase64: string;
+    timestamp: number;
+}
+
 const openDB = (): Promise<IDBDatabase> => {
     return new Promise((resolve, reject) => {
-        const request = indexedDB.open(DB_NAME, 1);
+        const request = indexedDB.open(DB_NAME, 2);
         request.onerror = () => reject(request.error);
         request.onsuccess = () => resolve(request.result);
         request.onupgradeneeded = (e) => {
             const db = (e.target as IDBOpenDBRequest).result;
             if (!db.objectStoreNames.contains(STORE_NAME)) {
                 db.createObjectStore(STORE_NAME, { keyPath: 'key' });
+            }
+            if (!db.objectStoreNames.contains(CHUNK_STORE_NAME)) {
+                db.createObjectStore(CHUNK_STORE_NAME, { keyPath: 'key' });
             }
         };
     });
@@ -90,15 +100,61 @@ export const cacheAudio = async (key: string, data: { blob: Blob, chunks: string
 export const clearCache = async (): Promise<void> => {
     try {
         const db = await openDB();
+        const storeNames = [STORE_NAME, CHUNK_STORE_NAME].filter(
+            s => db.objectStoreNames.contains(s)
+        );
         return new Promise((resolve, reject) => {
-            const tx = db.transaction(STORE_NAME, 'readwrite');
-            const store = tx.objectStore(STORE_NAME);
-            const request = store.clear();
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(request.error);
+            const tx = db.transaction(storeNames, 'readwrite');
+            for (const name of storeNames) {
+                tx.objectStore(name).clear();
+            }
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => reject(tx.error);
         });
     } catch (e) {
         console.warn("IndexedDB clear error", e);
         throw e;
+    }
+};
+
+export const generateChunkCacheKey = async (chunkText: string, voice: string): Promise<string> => {
+    const data = JSON.stringify({ t: chunkText.trim(), v: voice });
+    const msgBuffer = new TextEncoder().encode(data);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return 'chunk_' + hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+};
+
+export const getCachedChunkAudio = async (key: string): Promise<string | null> => {
+    try {
+        const db = await openDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(CHUNK_STORE_NAME, 'readonly');
+            const store = tx.objectStore(CHUNK_STORE_NAME);
+            const request = store.get(key);
+            request.onsuccess = () => {
+                resolve(request.result ? request.result.pcmBase64 : null);
+            };
+            request.onerror = () => reject(request.error);
+        });
+    } catch (e) {
+        console.warn("IndexedDB chunk read error", e);
+        return null;
+    }
+};
+
+export const cacheChunkAudio = async (key: string, pcmBase64: string): Promise<void> => {
+    try {
+        const db = await openDB();
+        return new Promise<void>((resolve, reject) => {
+            const tx = db.transaction(CHUNK_STORE_NAME, 'readwrite');
+            const store = tx.objectStore(CHUNK_STORE_NAME);
+            const entry: ChunkCacheEntry = { key, pcmBase64, timestamp: Date.now() };
+            const request = store.put(entry);
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject(request.error);
+        });
+    } catch (e) {
+        console.warn("IndexedDB chunk write error", e);
     }
 };

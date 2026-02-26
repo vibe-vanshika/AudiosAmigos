@@ -47,3 +47,30 @@ export const chunkText = (text: string, maxWords: number = 300): string[] => {
 
   return chunks;
 };
+
+/**
+ * Splits a single chunk roughly in half at the nearest sentence boundary.
+ * Used as a fallback when a chunk repeatedly fails synthesis -- smaller
+ * pieces are more likely to succeed with the TTS API.
+ * Returns two sub-chunks, or the original in a single-element array if
+ * no reasonable split point exists.
+ */
+export const splitChunk = (chunk: string): string[] => {
+  const sentenceRegex = /[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g;
+  const sentences = chunk.match(sentenceRegex);
+
+  if (!sentences || sentences.length <= 1) {
+    const words = chunk.split(/\s+/);
+    if (words.length <= 4) return [chunk];
+    const mid = Math.ceil(words.length / 2);
+    return [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
+  }
+
+  const midSentence = Math.ceil(sentences.length / 2);
+  const first = sentences.slice(0, midSentence).join('').trim();
+  const second = sentences.slice(midSentence).join('').trim();
+
+  if (!first) return [second];
+  if (!second) return [first];
+  return [first, second];
+};
