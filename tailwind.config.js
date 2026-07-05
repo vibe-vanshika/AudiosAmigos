@@ -10,8 +10,8 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter', 'sans-serif'],
-                display: ['Manrope', 'sans-serif'],
+                sans: ['Instrument Sans', 'Inter', 'sans-serif'],
+                display: ['Bricolage Grotesque', 'Manrope', 'sans-serif'],
                 mono: ['JetBrains Mono', 'monospace'],
             },
             spacing: {

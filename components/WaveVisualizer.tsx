@@ -4,6 +4,8 @@ interface WaveVisualizerProps {
   analyser: AnalyserNode | null;
 }
 
+const idleBars = [18, 38, 24, 58, 32, 72, 44, 64, 28, 52, 36, 68, 46, 30, 56, 40, 62, 26, 48, 34, 70, 42, 54, 22];
+
 export const WaveVisualizer: React.FC<WaveVisualizerProps> = ({ analyser }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -50,10 +52,10 @@ export const WaveVisualizer: React.FC<WaveVisualizerProps> = ({ analyser }) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const gradient = ctx.createLinearGradient(0, height, 0, 0);
-      gradient.addColorStop(0, 'rgba(139, 92, 246, 0.0)');
-      gradient.addColorStop(0.3, 'rgba(139, 92, 246, 0.2)');
-      gradient.addColorStop(0.6, 'rgba(56, 189, 248, 0.4)');
-      gradient.addColorStop(1, 'rgba(255, 255, 255, 0.9)');
+      gradient.addColorStop(0, 'rgba(228, 109, 50, 0)');
+      gradient.addColorStop(0.35, 'rgba(228, 109, 50, 0.22)');
+      gradient.addColorStop(0.7, 'rgba(244, 178, 77, 0.55)');
+      gradient.addColorStop(1, 'rgba(243, 234, 215, 0.95)');
 
       ctx.fillStyle = gradient;
       const usableBins = Math.floor(bufferLength * 0.7);
@@ -73,11 +75,21 @@ export const WaveVisualizer: React.FC<WaveVisualizerProps> = ({ analyser }) => {
   }, [analyser]);
 
   return (
-    <div ref={containerRef} className="w-full h-24 md:h-32 bg-[#020617] relative border-b border-white/5 shadow-xl">
+    <div ref={containerRef} className="w-full h-28 md:h-36 bg-[var(--studio-black)] relative border-b border-[var(--studio-line)] shadow-xl scanline">
+      {!analyser && (
+        <div className="absolute inset-x-5 bottom-5 top-5 flex items-end justify-between gap-1 opacity-70">
+          {idleBars.map((height, index) => (
+            <span
+              key={index}
+              className="flex-1 rounded-sm bg-[linear-gradient(180deg,var(--studio-paper),var(--signal-amber)_52%,rgba(228,109,50,0.2))]"
+              style={{ height: `${height}%` }}
+            />
+          ))}
+        </div>
+      )}
       <canvas ref={canvasRef} className="w-full h-full opacity-80" />
-      {/* Reflection overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/[0.03] via-transparent to-transparent pointer-events-none"></div>
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(18,22,40,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,6px_100%] pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(243,234,215,0)_50%,rgba(0,0,0,0.24)_50%)] bg-[length:100%_4px] pointer-events-none"></div>
+      <div className="absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent,var(--signal-amber),transparent)] pointer-events-none"></div>
     </div>
   );
 };

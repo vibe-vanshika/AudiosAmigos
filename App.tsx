@@ -195,9 +195,9 @@ const App: React.FC = () => {
   const handleDismissError = useCallback(() => setError(null), []);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-3 md:p-8 flex flex-col items-center selection:bg-cyan-500/30">
+    <div className="min-h-screen bg-[var(--studio-ink)] text-[var(--studio-paper)] px-3 py-4 md:px-8 md:py-8 flex flex-col items-center selection:bg-amber-400/25">
       <BackgroundDecorations />
-      <main className="w-full max-w-5xl relative z-10 flex flex-col items-center pb-10 md:pb-20">
+      <main className="w-full max-w-6xl relative z-10 flex flex-col items-center pb-10 md:pb-16">
         <Header
           onOpenHistory={() => setShowHistoryModal(true)}
           onOpenApiKey={() => setIsApiKeyModalOpen(true)}
@@ -212,7 +212,7 @@ const App: React.FC = () => {
           ) : audioUrl && (
             <div className="w-full flex flex-col items-center">
               <AudioPlayer audioUrl={audioUrl} audioRef={audioRef} generatedChunks={generatedChunks} activeChunkIndex={activeChunkIndex} estimatedWordIndex={estimatedWordIndex} />
-              <button onClick={() => setIsEditing(true)} className="group mt-6 md:mt-8 px-8 py-3 rounded-full font-semibold bg-slate-900 border border-white/10 hover:border-cyan-500/20 text-slate-300 transition-all duration-200 active:scale-[0.97] flex items-center gap-2 hover:gap-3 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-cyan-500/30 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 outline-none">
+              <button onClick={() => setIsEditing(true)} className="studio-button focus-ring group mt-6 md:mt-8 px-6 py-3 font-semibold text-[var(--studio-paper)] flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
                 Generate New
               </button>
@@ -223,8 +223,8 @@ const App: React.FC = () => {
         </div>
         <HistoryPanel history={history} isOpen={showHistoryModal} onClose={() => setShowHistoryModal(false)} onRestore={handleRestoreHistory} onDelete={handleDeleteHistory} onClearCache={() => { clearCache(); setHistory([]); }} />
         <ApiKeyModal isOpen={isApiKeyModalOpen} onClose={() => setIsApiKeyModalOpen(false)} />
-        <footer className="w-full py-4 md:py-8 mt-6 md:mt-12 border-t border-white/5 flex justify-center">
-          <p className="text-slate-500 text-xs font-medium tracking-wider">
+        <footer className="w-full py-4 md:py-8 mt-6 md:mt-12 border-t border-[var(--studio-line)] flex justify-center">
+          <p className="text-[var(--studio-dim)] text-xs font-medium">
             &copy; 2026 Technited Minds
           </p>
         </footer>

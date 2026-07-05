@@ -48,7 +48,7 @@ export const SourceTextarea: React.FC<SourceTextareaProps> = ({ value, onChange,
 
   return (
     <div className={`flex flex-col ${showLabels ? 'w-full md:w-1/2' : 'w-full'} relative`}>
-      <div className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-slate-500 bg-black/30 border-b border-white/5 flex justify-between items-center z-20 min-h-[44px]">
+      <div className="px-4 md:px-5 py-3 label-kicker text-[var(--studio-muted)] bg-[rgba(5,6,4,0.42)] border-b border-[var(--studio-line)] flex justify-between items-center z-20 min-h-[50px]">
         <span>{showLabels ? 'Original' : 'Source Content'}</span>
         
         <div className="flex items-center gap-2">
@@ -65,7 +65,7 @@ export const SourceTextarea: React.FC<SourceTextareaProps> = ({ value, onChange,
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={disabled || isExtracting}
-              className="group/import text-cyan-600 hover:text-cyan-400 disabled:opacity-30 transition-all duration-200 uppercase tracking-tight text-xs flex items-center gap-1.5 py-2 px-3 rounded-lg bg-white/5 hover:bg-white/10 min-h-[36px]"
+              className="studio-button focus-ring group/import text-xs flex items-center gap-1.5 py-2 px-3 min-h-[36px] text-[var(--signal-blue)] disabled:opacity-35 disabled:cursor-not-allowed"
             >
               {isExtracting ? (
                 <span className="flex items-center gap-1.5">
@@ -88,28 +88,28 @@ export const SourceTextarea: React.FC<SourceTextareaProps> = ({ value, onChange,
 
           {value.length > 0 && !disabled && !isExtracting && (
             showClearConfirm ? (
-              <div className="flex items-center gap-2 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20 animate-slide-up shadow-lg">
-                <span className="text-red-400 text-xs font-black">RESET?</span>
+              <div className="flex items-center gap-2 bg-[rgba(242,106,95,0.1)] px-3 py-1.5 rounded-lg border border-[rgba(242,106,95,0.26)] animate-slide-up shadow-lg">
+                <span className="text-[var(--danger)] text-xs font-black">Reset?</span>
                 <button 
                   type="button"
                   onClick={handleConfirmClear}
-                  className="text-white hover:text-red-400 transition-colors uppercase tracking-tight text-xs font-black py-1 px-2 min-h-[32px]"
+                  className="text-[var(--studio-paper)] hover:text-[var(--danger)] transition-colors text-xs font-black py-1 px-2 min-h-[32px]"
                 >
-                  YES
+                  Yes
                 </button>
                 <button 
                   type="button"
                   onClick={() => setShowClearConfirm(false)}
-                  className="text-slate-500 hover:text-slate-200 transition-colors uppercase tracking-tight text-xs py-1 px-2 min-h-[32px]"
+                  className="text-[var(--studio-muted)] hover:text-[var(--studio-paper)] transition-colors text-xs py-1 px-2 min-h-[32px]"
                 >
-                  NO
+                  No
                 </button>
               </div>
             ) : (
               <button 
                 type="button"
                 onClick={() => setShowClearConfirm(true)}
-                className="text-slate-500 hover:text-red-400 transition-all duration-200 uppercase tracking-tight text-xs py-2 px-3 rounded-lg hover:bg-red-500/10 cursor-pointer min-h-[36px]"
+                className="studio-button focus-ring text-[var(--studio-muted)] hover:text-[var(--danger)] text-xs py-2 px-3 cursor-pointer min-h-[36px]"
               >
                 Clear
               </button>
@@ -121,8 +121,8 @@ export const SourceTextarea: React.FC<SourceTextareaProps> = ({ value, onChange,
         ref={textareaRef}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Type, paste, or import a file..."
-        className="w-full min-h-[200px] md:min-h-[350px] bg-transparent text-base md:text-lg text-slate-200 p-4 md:p-8 pb-14 md:pb-20 focus:outline-none resize-none placeholder:text-slate-700 placeholder:font-extralight placeholder:tracking-wide font-light leading-relaxed font-sans selection:bg-cyan-500/20"
+        placeholder="Paste the script here..."
+        className="w-full min-h-[230px] md:min-h-[380px] bg-transparent text-base md:text-lg text-[var(--studio-paper)] p-4 md:p-7 focus:outline-none resize-none placeholder:text-[var(--studio-dim)] font-normal leading-relaxed font-sans selection:bg-amber-400/20"
         disabled={disabled || isExtracting}
       />
     </div>

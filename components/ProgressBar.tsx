@@ -28,17 +28,17 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ state }) => {
 
   return (
     <div className={`w-full mb-6 md:mb-8 px-0 md:px-4 ${isExiting ? 'animate-collapse-out' : 'animate-slide-up'}`}>
-      <div className="flex justify-between text-xs text-slate-400 mb-2 font-mono tracking-wide">
+      <div className="flex justify-between text-xs text-[var(--studio-muted)] mb-2 font-mono">
         <span className="flex items-center gap-2">
-            {!isExiting && <span className="w-2 h-2 rounded-full border-2 border-cyan-500 border-t-transparent animate-spin"></span>}
-            {isExiting ? <span className="text-emerald-400">Generation Complete</span> : state.currentStep}
+            {!isExiting && <span className="w-2 h-2 rounded-sm border-2 border-[var(--signal-amber)] border-t-transparent animate-spin"></span>}
+            {isExiting ? <span className="text-[var(--signal-green)]">Generation Complete</span> : state.currentStep}
         </span>
-        <span className="text-cyan-400">{Math.round(state.progress)}%</span>
+        <span className="text-[var(--signal-amber)]">{Math.round(state.progress)}%</span>
       </div>
       
-      <div className="w-full bg-slate-900 rounded-full h-1 overflow-hidden border border-white/5">
+      <div className="w-full bg-[rgba(16,19,17,0.9)] rounded h-2 overflow-hidden border border-[var(--studio-line)]">
         <div 
-          className={`h-full rounded-full transition-all duration-300 ease-out relative overflow-hidden ${isExiting ? 'bg-emerald-500' : 'bg-gradient-to-r from-indigo-500 to-cyan-500'}`}
+          className={`h-full rounded transition-all duration-300 ease-out relative overflow-hidden ${isExiting ? 'bg-[var(--signal-green)]' : 'bg-[linear-gradient(90deg,var(--signal-orange),var(--signal-amber))]'}`}
           style={{ width: `${state.progress}%` }}
         >
           {/* Shimmer effect */}
@@ -55,10 +55,10 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ state }) => {
                     key={idx}
                     className={`h-0.5 rounded-full transition-all duration-300 ${
                         idx < state.processedChunks 
-                            ? 'bg-emerald-500 w-3' 
+                            ? 'bg-[var(--signal-green)] w-3'
                             : idx === state.processedChunks
-                                ? 'bg-cyan-500 w-6 animate-pulse'
-                                : 'bg-slate-800 w-1'
+                                ? 'bg-[var(--signal-amber)] w-6 animate-pulse'
+                                : 'bg-[rgba(243,234,215,0.12)] w-1'
                     }`}
                 />
             ))}

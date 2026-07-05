@@ -32,15 +32,14 @@ export const PlaybackInterface: React.FC<PlaybackInterfaceProps> = ({
   const percentage = (currentTime / (duration || 1)) * 100;
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#020617] via-[#020617]/95 to-transparent pt-10 pb-4 px-4 md:px-6">
-      {/* Seek bar with dot indicator */}
-      <div className="relative w-full h-2 md:h-1.5 bg-slate-800 rounded-full mb-4 cursor-pointer group">
-        <div 
-          className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 to-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.5)] rounded-full transition-[width] duration-100" 
+    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[rgba(5,6,4,0.98)] via-[rgba(5,6,4,0.9)] to-transparent pt-10 pb-4 px-4 md:px-6">
+      <div className="relative w-full h-2 bg-[rgba(243,234,215,0.12)] rounded mb-4 cursor-pointer group border border-[rgba(243,234,215,0.1)]">
+        <div
+          className="absolute top-0 left-0 h-full bg-[linear-gradient(90deg,var(--signal-orange),var(--signal-amber))] shadow-[0_0_12px_rgba(244,178,77,0.42)] rounded transition-[width] duration-100"
           style={{ width: `${percentage}%` }}
         ></div>
         <div
-          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.6)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+          className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-sm bg-[var(--studio-paper)] shadow-[0_0_10px_rgba(244,178,77,0.64)] opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
           style={{ left: `${percentage}%`, transform: `translate(-50%, -50%)` }}
         />
         <input
@@ -58,7 +57,8 @@ export const PlaybackInterface: React.FC<PlaybackInterfaceProps> = ({
         <div className="flex items-center gap-3 md:gap-4">
           <button 
             onClick={onTogglePlay}
-            className="w-12 h-12 rounded-full bg-cyan-500 text-black flex items-center justify-center hover:bg-cyan-400 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all duration-200 active:scale-[0.97] flex-shrink-0 focus-visible:ring-2 focus-visible:ring-cyan-400/30 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 outline-none"
+            className="focus-ring w-12 h-12 rounded-lg bg-[var(--signal-amber)] text-[#25190b] flex items-center justify-center hover:bg-[#f7c76b] hover:shadow-[0_0_22px_rgba(244,178,77,0.36)] transition-all duration-200 active:scale-[0.97] flex-shrink-0"
+            aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
           >
             {isPlaying ? (
               <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
@@ -67,26 +67,28 @@ export const PlaybackInterface: React.FC<PlaybackInterfaceProps> = ({
             )}
           </button>
           <div className="flex flex-col">
-            <span className="text-white font-display text-xs md:text-sm font-bold tracking-widest">{formatTime(currentTime)}</span>
-            <span className="text-slate-500 text-xs font-mono">{formatTime(duration)}</span>
+            <span className="text-[var(--studio-paper)] font-display text-sm md:text-base font-bold">{formatTime(currentTime)}</span>
+            <span className="text-[var(--studio-muted)] text-xs font-mono">{formatTime(duration)}</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2 md:gap-3">
-          <div className="flex items-center gap-1.5 md:gap-2 bg-slate-800/80 rounded-lg px-2.5 md:px-3 py-2.5 border border-white/5 backdrop-blur-md min-h-[44px]">
-            <span className="text-xs uppercase text-slate-400 font-bold hidden sm:inline">Speed</span>
+          <div className="flex items-center gap-1.5 md:gap-2 bg-[rgba(16,19,17,0.82)] rounded-lg px-2.5 md:px-3 py-2.5 border border-[var(--studio-line)] backdrop-blur-md min-h-[44px]">
+            <span className="text-xs text-[var(--studio-muted)] font-bold hidden sm:inline">Speed</span>
             <select 
               value={playbackRate}
               onChange={(e) => onRateChange(parseFloat(e.target.value))}
-              className="bg-transparent text-cyan-400 text-sm font-mono font-bold focus:outline-none cursor-pointer min-h-[24px]"
+              className="bg-transparent text-[var(--signal-amber)] text-sm font-mono font-bold focus:outline-none cursor-pointer min-h-[24px]"
             >
-              {speeds.map(s => <option key={s} value={s} className="bg-slate-900">{s}x</option>)}
+              {speeds.map(s => <option key={s} value={s} className="bg-[#101311]">{s}x</option>)}
             </select>
           </div>
           <a
             href={audioUrl}
-            download={`lumina-export-${Date.now()}.wav`}
-            className="p-3 rounded-lg bg-slate-800/80 border border-white/5 text-slate-400 hover:text-cyan-400 transition-all duration-200 backdrop-blur-md min-w-[44px] min-h-[44px] flex items-center justify-center active:scale-[0.97]"
+            download={`audios-amigos-${Date.now()}.wav`}
+            className="icon-button focus-ring"
+            title="Download audio"
+            aria-label="Download audio"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

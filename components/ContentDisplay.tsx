@@ -26,11 +26,10 @@ export const ContentDisplay: React.FC<ContentDisplayProps> = ({
   const showTranslationPreview = targetLanguage !== 'original';
 
   return (
-    <div className="glass-card rounded-2xl p-1 mb-4 md:mb-6 relative group animate-slide-up" style={{ animationDelay: '0.2s' }}>
-      <div className="absolute -inset-[1px] bg-gradient-to-br from-violet-500/10 via-transparent to-cyan-500/10 rounded-2xl pointer-events-none opacity-50 transition-opacity duration-500 group-hover:opacity-80"></div>
-      
-      <div className="relative bg-black/40 rounded-xl overflow-hidden min-h-[200px] md:min-h-[350px] backdrop-blur-sm shadow-inner transition-colors duration-300">
-        <div className={`flex ${showTranslationPreview ? 'flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-white/5' : 'flex-col'} h-full transition-all duration-300`}>
+    <div className="glass-card rounded-lg mb-4 md:mb-6 relative animate-slide-up overflow-hidden" style={{ animationDelay: '0.2s' }}>
+      <div className="h-2 meter-strip border-b border-[var(--studio-line)]" />
+      <div className="relative audio-surface min-h-[230px] md:min-h-[380px] transition-colors duration-300">
+        <div className={`flex ${showTranslationPreview ? 'flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-[var(--studio-line)]' : 'flex-col'} h-full transition-all duration-300`}>
           <SourceTextarea 
             value={text} 
             onChange={onTextChange} 
@@ -44,14 +43,14 @@ export const ContentDisplay: React.FC<ContentDisplayProps> = ({
               language={targetLanguage} 
             />
           )}
-          <div className="absolute bottom-0 left-0 right-0 px-4 md:px-6 py-2 md:py-2.5 bg-black/60 border-t border-white/5 backdrop-blur-xl flex flex-wrap gap-3 md:gap-4 justify-between items-center text-xs font-mono text-slate-500 pointer-events-none z-10">
-            <div className="flex items-center gap-4 md:gap-6">
-              <span className="flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-cyan-500/50"></span>{wordCount} Words</span>
-              {wordCount > 0 && <span className="flex items-center gap-1.5"><span className="w-1 h-1 rounded-full bg-slate-700"></span>Est. {estDisplay}</span>}
-            </div>
-            {wordCount > 50 && <span className="text-cyan-400/70 bg-cyan-500/5 px-2 py-0.5 rounded-full border border-cyan-500/10">Smart Chunking Ready</span>}
-          </div>
         </div>
+      </div>
+      <div className="px-4 md:px-6 py-3 border-t border-[var(--studio-line)] bg-[rgba(5,6,4,0.66)] flex flex-wrap gap-3 md:gap-5 justify-between items-center text-xs font-mono text-[var(--studio-muted)]">
+        <div className="flex flex-wrap items-center gap-3 md:gap-5">
+          <span className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-sm bg-[var(--signal-amber)]"></span>{wordCount} words</span>
+          {wordCount > 0 && <span className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-sm bg-[var(--signal-blue)]"></span>{estDisplay} estimated</span>}
+        </div>
+        {wordCount > 50 && <span className="text-[var(--signal-green)] bg-[rgba(88,214,141,0.08)] px-2.5 py-1 rounded border border-[rgba(88,214,141,0.18)]">Chunking ready</span>}
       </div>
     </div>
   );
